@@ -1,18 +1,49 @@
-clc, clear, close all
-
-% This script loads postprocessed Dingwell’s data, generates and saves 
-% postprocessed, shuffled surrogates both for ST and SL 
-% (in the same way as original MAT-files: original series, 
-% MARS series etc.). 
-
-% Before running the script,  please set speed (SPD). 
+% =========================================================================
+% This script loads gait data from Dingwell’s MAT-files and calculates 
+% shuffled surrogate data. Then it finds 
+% piecewise linear MARS trends in surrogate time series.
+% Before running the script,  please set:
+%       1) speed (SPD)
+%       2) random number generator seeds.
 % By default the variable generateFigures is set to true 
-% so that the surrogate time series for ST and SL 
+% so that the surrogate time series for ST and SL and their trends 
 % are plotted for all subjects. 
 % Please ensure that you have added ARESLab folder (in libs/ folder) 
-% to MATLAB path. 
+% to MATLAB search path. 
+% =========================================================================
+
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+clc, clear, close all
 
 SPD = 1; % 1 - 100, 2 - 110, 3 - 90, 4 - 120, 5 - 80 [%PWS]
+seed=456
+rng(seed)
 generateFigures  = true;
 
 if(SPD < 1 || SPD > 5)
@@ -66,9 +97,9 @@ for i = 1 : s(2)
 		Y = surSL; 
         % build MARS model using ARESLab
 		model = aresbuild(X,Y,params);
-        % generate trends
+        % calculate trends
 		predSL = arespredict(model,X);
-        % generate residuals (noise)
+        % calculate MARS residuals
 		detrendedSL = Y - predSL;
 		
 		surrogatesSL_trends{end+1} = predSL;
@@ -107,9 +138,9 @@ for i = 1 : s(2)
 		Y = surST; 
         % build MARS model using ARESLab
 		model = aresbuild(X,Y,params);
-        % generate trends
+        % calculate trends
 		predST = arespredict(model,X);
-		% generate residuals (noise)
+		% calculate residuals (noise)
 		detrendedST = Y - predST;
 		
         surrogatesST_trends{end+1} = predST;
@@ -155,7 +186,7 @@ for i = 1 : s(2)
   
 end
 
-% prepare data to save
+% prepare data for saving
 data_surrogatesSL.trendsAll = surrogatesSL_trends;
 data_surrogatesSL.seriesAll = surrogatesSL;
 data_surrogatesSL.timestampsAll = timestampsSL;

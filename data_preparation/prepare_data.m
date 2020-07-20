@@ -1,7 +1,7 @@
 % =========================================================================
 % This script loads Dingwell’s MAT-file and calculates piecewise linear MARS
 % trends.  The calculations are performed for a given treadmill speed (SPD)
-% and gait parameter (attributeNumber) The output file contains:
+% and gait parameter (attributeNumber). The output file contains:
 % original series, MARS series, MARS residuals, time stamps,
 % MARS models, MARS knot indices, and values at knots.
 
