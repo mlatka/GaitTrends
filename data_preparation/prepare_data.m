@@ -1,4 +1,4 @@
-clc, clear, close all
+% =========================================================================
 % This script loads Dingwell’s MAT-file and calculates piecewise linear MARS
 % trends.  The calculations are performed for a given treadmill speed (SPD)
 % and gait parameter (attributeNumber) The output file contains:
@@ -9,7 +9,37 @@ clc, clear, close all
 % By default the variable generateFigures is set to true so that the time
 % series and their MARS trends are plotted for all subjects. 
 % Please ensure that you have added ARESLab folder (in libs/ folder) 
-% to MATLAB path. 
+% to MATLAB search path. 
+% =========================================================================
+
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+clc, clear, close all
 
 SPD = 1; % 1 - 100, 2 - 110, 3 - 90, 4 - 120, 5 - 80 [%PWS]
 attributeNumber = 1; % 1 - SL, 2 - ST, 3 - SS
@@ -50,7 +80,7 @@ for i = 1 : length(fileList)
     inputFileName = strcat(dataDir,fileList(i).name);
     load(inputFileName);
 
-    % choose right data according to SPD
+    % select matrices corresponding to the chosen treadmill speed (SPD)
     switch SPD
         case 1
             data1 = SPD1TR1;
@@ -77,15 +107,15 @@ for i = 1 : length(fileList)
     % perform calculations for trial 1
     if length(data1(:,1)) > 1
 
-        % cumulatie ST to obtain time stamps
+        % cumulate ST to obtain time stamps
         X = cumsum(data1(:,2))-data1(1,2);
         Y = data1(:,attributeNumber);
 
-        % buildi MARS model using ARESLab
+        % build MARS model using ARESLab
         model = aresbuild(X,Y,params);
-        % generate trends
+        % calculate trends
         predY = arespredict(model,X);
-        % generate residuals (noise)
+        % calculate MARS residuals
         detrendedY = Y - predY;
 
         residualsAll{end+1} = detrendedY;
@@ -144,18 +174,18 @@ for i = 1 : length(fileList)
     % trial 2
     strTrial = '2';
     
-    % perform calculations for trial 1
+    % perform calculations for trial 2
 	if length(data2(:,1)) > 1
 
-        % cumulate ST to obtain time series
+        % cumulate ST to obtain time stamps
 		X = cumsum(data2(:,2))-data2(1,2);
 		Y = data2(:,attributeNumber);
 		
 		% build MARS model using ARESLab
         model = aresbuild(X,Y,params);
-        % generate trends
+        % calculate MARS trends
         predY = arespredict(model,X);
-        % generate residuals (noise)
+        % calculate MARS residuals 
 		detrendedY = Y - predY;
 		
 		residualsAll{end+1} = detrendedY;
@@ -180,7 +210,7 @@ for i = 1 : length(fileList)
 		end
 		
 		valuesAtKnot = [];
-		
+        
 		if(knotSites > 0)
 			knotIndices = [1 knotIndices];
 			knotSites = [1; knotSites];
@@ -214,7 +244,7 @@ for i = 1 : length(fileList)
 end
 
 
-% save data
+% save experimental time series and calculated quantities
 
 outputDir = '../data/mat_data/';
 file = strcat(outputDir,param,'_SPD',num2str(SPD),'.mat');
