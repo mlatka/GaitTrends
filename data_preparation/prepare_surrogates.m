@@ -19,7 +19,7 @@
 % GaitTrends: 
 % Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
 %          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
-% URL: 
+% URL: https://github.com/mlatka/GaitTrends.git
 %
 % Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
 %
