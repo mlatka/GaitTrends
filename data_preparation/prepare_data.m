@@ -3,13 +3,13 @@
 % trends.  The calculations are performed for a given treadmill speed (SPD)
 % and gait parameter (attributeNumber). The output file contains:
 % original series, MARS series, MARS residuals, time stamps,
-% MARS models, MARS knot indices, and values at knots.
+% MARS models, MARS knot indices, and values at MARS knots.
 
 % Before running the script,  please set: speed (SPD) and attribute (SL/ST/SS).
-% By default the variable generateFigures is set to true so that the time
+% By default, the variable generateFigures is set to true so that the time
 % series and their MARS trends are plotted for all subjects. 
 % Please ensure that you have added ARESLab folder (in libs/ folder) 
-% to MATLAB search path. 
+% to the MATLAB search path. 
 % =========================================================================
 
 % GaitTrends: 

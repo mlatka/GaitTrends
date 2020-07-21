@@ -5,7 +5,7 @@
 % Before running the script, please set attribute 
 % (SL/ST/SS) and type of surrogates (cross_correlated true, 
 % independent = false). By default the variable saveResults 
-% is set to true so that the results are saved to MAT-file.
+% is set to true so that the results are saved to a MAT-file.
 % =========================================================================
 
 % GaitTrends: 
