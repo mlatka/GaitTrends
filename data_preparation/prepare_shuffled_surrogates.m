@@ -9,7 +9,7 @@
 % so that the surrogate time series for ST and SL and their trends 
 % are plotted for all subjects. 
 % Please ensure that you have added ARESLab folder (in libs/ folder) 
-% to MATLAB search path. 
+% to the MATLAB search path. 
 % =========================================================================
 
 % GaitTrends: 
