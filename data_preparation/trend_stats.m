@@ -1,17 +1,48 @@
+% =========================================================================
+% This script calculates normalized MARS trend durations and normalized trend 
+% slopes for each treadmill speed (SPD). It also calculates these 
+% two quantities for trends lasting longer that the chosen threshold. 
+% The script uses MAT-files located in ..\data\mat_data folder. These input
+% files must be created first by running prepare_data.m
+% Change attributeNumber variable to select gait parameter (1 – SL, 2 – ST, 3 – SS). 
+% The script  plots histograms of normalized trend duration
+% and normalized slope of long trends.  By default, the output MAT files
+% are saved in ../data/trend_stats/ folder.
+% =========================================================================
+
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+
 clc, clear, close all
 
-% This script loads postprocessed Dingwell’s data
-% and calculates normalized trend durations 
-% and normalized trend slopes for every speed (SPD).
-% Furthermore, script calculates the same parameters
-% for long trends (lasting abovegiven treshold).
-
-% % Before running the script, please set attribute 
-% (SL/ST/SS), treshold for long trends. By default the variable 
-% saveResults is set to true so that the outcomes are saved to MAT-file.
 attributeNumber = 1; % 1 - SL, 2 - ST
 saveResults = true;
-tresh = 40;
+threshold = 40;
 
 addpath('../utils/');
 addpath('../data/mat_data/');
@@ -59,7 +90,7 @@ for i = 1 : s(2)
         [trendDurations, trendSlopes] = calculate_trend_stats(data,j);
         % calculate stats for long trends
 		[longTrendDurations, longTrendSlopes] = ... 
-            calculate_long_trend_stats(data,j,tresh);
+            calculate_long_trend_stats(data,j,threshold);
 
 		trend_dur = [trend_dur; trendDurations];
 		trend_slo = [trend_slo; trendSlopes];

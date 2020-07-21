@@ -1,18 +1,55 @@
+% =========================================================================
+%  This script generates an ensemble of 500 fractional Brownian motion (fbm) 
+%  random walks with a chosen Hurst exponent. The length of time series 
+%  was set to 260. Each trajectory was divided into non-overlapping windows
+%  of length k from k=40 to k=260 with step 20. For each window, the madogram
+%  estimator  and  detrended fluctuation analysis of order n=1 to n=3  were 
+%  used to compute the scaling exponents. The boxplots of scaling exponents 
+%  for all four methods are plotted as a function of window length.
+%  For a computer with 2 cores it may take up to 15 minutes to complete the
+%  calculations! The execution time decreases with the number of workers in
+%  the MATLAB parallel pool.
+%
+% Before running the script, please set the value of Hurst exponent (alpha).
+% By default the variable saveResults is set to true  so that the scaling
+% exponents are saved to a MAT-file.
+% Please ensure that you have added WFDB Toolbox folder (in libs/ folder) 
+% to the MATLAB search path. dfa function from WFDB library is used to 
+% perform detrended fluctuation analysis.
+% =========================================================================
+%
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+
 clc, clear, close all
 
-% This script generates Fractal Brownian Motion series with specific
-% Hurst exponent (parameter alpha)and calculates scaling exponent values 
-% using four methods (DFA1-3 and madogram) for various window lengths.
-% It takes some time (ca. 15 min.) to complete computations.
-
-% Before running the script, please set: Hurst exponent (alpha).
-% By default the variable saveResults is set to true 
-% so that the outcomes are saved to MAT-file.
-% Please ensure that you have added WFDB Toolbox folder (in libs/ folder) 
-% to MATLAB path.
-alpha = 0.75;
+alpha = 0.75; %Hurst exponent
 saveResults = true;
-
 
 outputDir = '../data/window_length_dependence/';
 window_lengths = 40:20:260;
@@ -20,7 +57,7 @@ alpha_matrix = [];
 
 parfor i = 1 : 500
     
-    % generate series using WFBM Toolbox
+    % generate fbm time series
     series = diff(wfbm(alpha,260));
     
     for w = 1 : length(window_lengths)
@@ -77,7 +114,7 @@ end
 labels = {'{\alpha}^(^1^)','{\alpha}^(^2^)','{\alpha}^(^3^)', ...
     '{\alpha}^(^M^D^)'};
 
-window_lengths = 40:20:300;
+window_lengths = 40:20:260;
 
 for col = 1:4 % 1 - alpha1, 2 - alpha2, 3 - alpha3
 
@@ -91,7 +128,6 @@ for col = 1:4 % 1 - alpha1, 2 - alpha2, 3 - alpha3
         selectedWindow = alpha_matrix(ind,col);
         dataBoxplot = [dataBoxplot; selectedWindow];
         groups = [groups; wl*ones(size(selectedWindow))];
-
 
     end
     

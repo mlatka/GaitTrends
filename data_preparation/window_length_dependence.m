@@ -1,18 +1,55 @@
+% =========================================================================
+% This script divides first 260 samples of ST and SL experimental time series
+% from ../data/mat_data folder into non-overlapping windows of length k 
+%(from k = 40 to k = 260 with step 20) and then for each such window 
+% calculates the scaling exponents using DFA1-3 and madogram algorithms.
+% The corresponding exponents are stored in the first four columns of 
+% the matrix. The window length and the trial’s id may be found 
+% in columns 5 and 6, respectively. Set fileName variable to choose 
+% the desired parameter (SL  or ST) and the  speed. E.g. fileName = Ln_SPD1.mat
+% corresponds to stride length at preferred walking speed while Tn_SPD1.mat}
+% is the stride time series for the same speed. The output MAT files are saved
+% in ../data/window_length_dependence folder. For a given scaling exponents,
+% the script generates the boxplots of its values for all window lengths.
+% The script uses dfa function from WFDB library. Please ensure 
+% that you have added WFDB Toolbox folder (in libs/ folder) 
+% to the MATLAB search path. dfa  function from WFDB library is used to
+% perform detrended fluctuation analysis.
+% =========================================================================
+
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+
 clc, clear, close all
 
-% This script loads postprocessed Dingwell’s data 
-% and calculates scaling exponent values using four methods 
-% (DFA1-3 and madogram) for various window lengths.
-
-% Before running the script, please set fileName e.g.
-% 'Ln_SPD1.mat' for SL at speed equal to 100% PWS.
-% By default the variable saveResults is set to true 
-% so that the outcomes are saved to MAT-file.
-% Please ensure that you have added WFDB Toolbox folder (in libs/ folder) 
-% to MATLAB path. 
+% 1 - 100, 2 - 110, 3 - 90, 4 - 120, 5 - 80 [%PWS]
 fileName = 'Ln_SPD1.mat';
 saveResults = true;
-
 
 addpath('../data/mat_data');
 addpath('../utils/');
@@ -22,7 +59,8 @@ s = size(data.residualsAll);
 alpha_matrix = [];
 window_lengths = 40:20:260;
 
-for i = 1 : s(2)
+tic
+parfor i = 1 : s(2)
     
     % gait parameter time series
     series = data.seriesAll{i};
@@ -69,6 +107,7 @@ for i = 1 : s(2)
     
     
 end % end for i (subjects)
+toc
 
 % save results (optional)
 if(saveResults)
@@ -82,7 +121,7 @@ end
 labels = {'{\alpha}^(^1^)','{\alpha}^(^2^)','{\alpha}^(^3^)', ...
     '{\alpha}^(^M^D^)'};
 
-window_lengths = 40:20:300;
+window_lengths = 40:20:260;
 
 for col = 1 : 4 % 1 - alpha1, 2 - alpha2, 3 - alpha3
 

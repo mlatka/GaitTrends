@@ -1,16 +1,44 @@
-clc, clear, close all
-
-% This script loads surrogate data
-% and calculates normalized trend durations 
-% and normalized trend slopes for every speed (SPD).
-
-% % Before running the script, please set attribute 
+% =========================================================================
+% This script loads surrogate data created by prepared_surrogates.m.
+% Then it calculates the normalized trend durations and normalized trend
+% slopes for every speed (SPD).
+% Before running the script, please set attribute 
 % (SL/ST/SS) and type of surrogates (cross_correlated true, 
 % independent = false). By default the variable saveResults 
-% is set to true so that the outcomes are saved to MAT-file.
+% is set to true so that the results are saved to MAT-file.
+% =========================================================================
+
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+
+clc, clear, close all
 cross_correlated = false;
 saveResults = true;
-
 
 addpath('../utils/');
 addpath('../data/surrogates/');
