@@ -1,11 +1,32 @@
+% =========================================================================
+% This script calculates:
+% 1) coefficient of variation (COV) for gait parameters (SL/ST/SS),
+% 2) trend speed and its COV,
+% 3) trend speed control.
+% The boxplots of these quantities are plotted for each treadmill speed.
+% =========================================================================
+%
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+
 clc, clear, close all
-
-% This script loads postprocessed Dingwell’s data 
-% and calculates coefficient of variation (COV) for: gait
-% parameters (SL/ST/SS), trend speed, and speed control.
-
-% Script generates boxplots of trend speed control and COV
-% of: trend speed, SL, ST, and SS for each treadmill speed.
 
 addpath('../data/mat_data/');
 
@@ -55,7 +76,7 @@ for i = 1 : 5 % 1-5 SPD
 			sum((ss-mean(ss)).^2)];
 
 
-	end % end j loop
+	end % end trial loop
 
 	COV_trend_speed_cell{end+1} = COV_trend_speed_vec;
 	COV_SL{end+1} = COV_SL_vec;
@@ -64,72 +85,26 @@ for i = 1 : 5 % 1-5 SPD
 	speed_control{end+1} = speed_control_vec;
 
 
-end % end i loop
+end % end speed loop
 
 % visualize data
-ind = [5, 3, 1, 2, 4];
-dat = [];
-group = [];
 
-for l = 1 : length(ind)
-    dat = [dat; speed_control{ind(l)}];
-    group = [group; l*ones(size(speed_control{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('trend speed control');
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% speed control
+boxplots_for_all_speeds(speed_control, 'experimental data',...
+    'trend speed control');
 
-dat = [];
-group = [];
+% COV trend speed
+boxplots_for_all_speeds(COV_trend_speed_cell, 'experimental data',...
+    'COV trend speed [%]');
 
-for l = 1 : length(ind)
-    dat = [dat; COV_trend_speed_cell{ind(l)}];
-    group = [group; l*ones(size(COV_trend_speed_cell{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV trend speed [%]');
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% COV SL
+boxplots_for_all_speeds(COV_SL, 'experimental data',...
+    'COV SL [%]');
 
-dat = [];
-group = [];
+% COV ST
+boxplots_for_all_speeds(COV_ST, 'experimental data',...
+    'COV ST [%]');
 
-for l = 1 : length(ind)
-    dat = [dat; COV_SL{ind(l)}];
-    group = [group; l*ones(size(COV_SL{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV SL [%]');
-set(gca,'XTickLabel',{'80','90','100','110','120'});
-
-%
-dat = [];
-group = [];
-
-for l = 1 : length(ind)
-    dat = [dat; COV_ST{ind(l)}];
-    group = [group; l*ones(size(COV_ST{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV ST [%]');
-set(gca,'XTickLabel',{'80','90','100','110','120'});
-
-dat = [];
-group = [];
-
-for l = 1 : length(ind)
-    dat = [dat; COV_SS{ind(l)}];
-    group = [group; l*ones(size(COV_SS{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV SS [%]');
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% COV SS
+boxplots_for_all_speeds(COV_SS, 'experimental data',...
+    'COV SS [%]');

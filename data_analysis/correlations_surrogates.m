@@ -1,14 +1,34 @@
+% =========================================================================
+% This script loads surrogate data created with ../data_preparation/prepare_surrogates.m
+% script and calculates Pearson's correlation coefficients between
+% ST and SL surrogates as well as their MARS trends and the corresponding 
+% MARS residuals. For trends, the boxplots of Pearson's correlation coefficients 
+% are plotted for each treadmill speed. Before running the script, 
+% please set type of surrogates (cross-correlated=true, independent = false).
+% =========================================================================
+%
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+
 clc, clear, close all
 
-% This script loads surrogate data and calculates Pearson's 
-% correlation coefficients between ST and SL for: original, 
-% trend, and residuals (noise) series for each treadmill speed.
-
-% Script generates boxplots of Pearson's correlation coefficients 
-% between ST and SL trends for each treadmill speed.
-
-% Before running the script,  please set: type of surrogates  
-% (cross-correlated true, independent = false).
 cross_correlated = true;
 
 addpath('../data/surrogates/');
@@ -36,7 +56,6 @@ for i = 1 : 5
 
 	s = size(SLdata.residualsAll);
 
-
 	for j = 1 : s(2)
 		
 		corrRow = [];
@@ -48,28 +67,28 @@ for i = 1 : 5
         % correlation coefficient and p-value for original series
 		[rhoOrg, pOrg] = corr(orgST,orgSL,'type','Pearson');
 			
-		% trend series
+		% MARS trends
 		trST = STdata.trendsAll{j};
 		trSL = SLdata.trendsAll{j};
 		
-        % correlation coefficient and p-value for trend series
+        % correlation coefficient and p-value for MARS trend
 		[rhoTr, pTr] = corr(trST,trSL,'type','Pearson');
 		 
-		% residuals series
+		% MARS residuals
 		resST = STdata.residualsAll{j};
 		resSL = SLdata.residualsAll{j};
 		
-         % correlation coefficient and p-value for residuals series
+         % correlation coefficient and p-value for MARS residuals
 		[rhoRes, pRes] = corr(resST,resSL,'type','Pearson');  
 		 
 		corrRow =  [rhoOrg pOrg rhoTr pTr rhoRes pRes];     
 		corrMatrix = [corrMatrix; corrRow]; 
 		
-	end % end j loop
+	end % end trial loop
 
 	corr_cell{end+1} = corrMatrix;
 
-end % end i loop
+end % end speed loop
 
 % visualize results for trends
 ind = [5, 3, 1, 2, 4];

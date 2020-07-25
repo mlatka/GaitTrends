@@ -69,44 +69,33 @@ end
 s = size(fileNamesCell);
 trend_durations_cell = {};
 trend_slopes_cell = {};
-trend_dur_fig = [];
+trend_durations_fig = [];
 
 long_trend_durations_cell = {};
 long_trend_slopes_cell = {};
-long_slo_fig = [];
+long_slopes_fig = [];
 
 for i = 1 : s(2)
     
 	data = load(fileNamesCell{i});
-	trialSize = size(data.residualsAll);
 	trend_dur = [];
 	trend_slo = [];
 	long_trend_dur = [];
 	long_trend_slo = [];
 
-	for j = 1 : trialSize(2)
 
-		% calculate stats for trends
-        [trendDurations, trendSlopes] = calculate_trend_stats(data,j);
-        % calculate stats for long trends
-		[longTrendDurations, longTrendSlopes] = ... 
-            calculate_long_trend_stats(data,j,threshold);
+	% calculate trend stats
+    [trendDurations, trendSlopes, longTrendDurations, longTrendSlopes] = ...
+        calculate_trend_stats(data, threshold);
 
-		trend_dur = [trend_dur; trendDurations];
-		trend_slo = [trend_slo; trendSlopes];
-		trend_dur_fig =[trend_dur_fig;trend_dur];
+	trend_durations_cell{end+1} = trendDurations;
+	trend_slopes_cell{end+1} = trendSlopes;
 
-		long_trend_dur = [long_trend_dur; longTrendDurations];
-		long_trend_slo = [long_trend_slo; longTrendSlopes];
-		long_slo_fig = [long_slo_fig; longTrendSlopes];
-
-	end 
-
-	trend_durations_cell{end+1} = trend_dur;
-	trend_slopes_cell{end+1} = trend_slo;
-
-	long_trend_durations_cell{end+1} = long_trend_dur;
-	long_trend_slopes_cell{end+1} = long_trend_slo;
+	long_trend_durations_cell{end+1} = longTrendDurations;
+	long_trend_slopes_cell{end+1} = longTrendSlopes;
+    
+    trend_durations_fig = [trend_durations_fig; trendDurations];
+    long_slopes_fig = [long_slopes_fig; longTrendSlopes];
 
 end 
 
@@ -120,13 +109,13 @@ end
 
 % visualize results
 figure;
-histogram(trend_dur_fig,30,'Normalization','pdf');
+histogram(trend_durations_fig,30,'Normalization','pdf');
 xlabel('normalized trend duration [s]');
 ylabel('pdf');
 title(strcat(param,' trends'));
 
 figure;
-histogram(long_slo_fig,30,'Normalization','pdf');
+histogram(long_slopes_fig,30,'Normalization','pdf');
 xlabel('normalized slope');
 ylabel('pdf');
 title(strcat(param,' long trends'));

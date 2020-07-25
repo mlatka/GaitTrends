@@ -74,37 +74,28 @@ for i = 1 : s(2)
       
 	data = load(strcat(dir,fileNamesCell{i}));
 
-	trialSize = size(data.data_surrogatesSL.residualsAll);
-	trendSL_dur = [];
-	trendSL_slo = [];
+	surrSL_trend_durations = [];
+	surrSL_trend_slopes = [];
 
-	trendST_dur = [];
-	trendST_slo = [];
+	surrST_trend_durations = [];
+	surrST_trend_slopes = [];
 
-	for j = 1 : trialSize(2)
+	% calculate duration and slope of trends in surrogates of SL
+    [surrSL_trend_durations, surrSL_trend_slopes] = ...
+        calculate_trend_stats(data.data_surrogatesSL);
+    
+    % calculate duration and slope of trends in surrogates of ST
+    [surrST_trend_durations, surrST_trend_slopes] = ...
+        calculate_trend_stats(data.data_surrogatesST);
 
-		% calculate stats for SL trends
-        [trendDurationsSL, trendSlopesSL] = ...
-			calculate_trend_stats(data.data_surrogatesSL,j);
-        % calculate stats for ST trends
-		[trendDurationsST, trendSlopesST] = ...
-			calculate_trend_stats(data.data_surrogatesST,j);
+	trend_durationsSL_cell{end+1} = surrSL_trend_durations;
+	trend_slopesSL_cell{end+1} = surrSL_trend_slopes;
 
-		trendSL_dur = [trendSL_dur; trendDurationsSL];
-		trendSL_slo = [trendSL_slo; trendSlopesSL];
-		trend_durSL_fig =[trend_durSL_fig;trendSL_dur];
-
-		trendST_dur = [trendST_dur; trendDurationsST];
-		trendST_slo = [trendST_slo; trendSlopesST];
-		trend_durST_fig =[trend_durST_fig;trendST_dur];
-
-	end 
-
-	trend_durationsSL_cell{end+1} = trendSL_dur;
-	trend_slopesSL_cell{end+1} = trendSL_slo;
-
-	trend_durationsST_cell{end+1} = trendST_dur;
-	trend_slopesST_cell{end+1} = trendST_slo;
+	trend_durationsST_cell{end+1} = surrST_trend_durations;
+	trend_slopesST_cell{end+1} = surrST_trend_slopes;
+    
+    trend_durSL_fig =[trend_durSL_fig; surrSL_trend_durations];
+    trend_durST_fig =[trend_durST_fig; surrST_trend_durations];
 
 end 
 

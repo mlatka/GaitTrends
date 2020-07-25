@@ -1,16 +1,39 @@
+% =========================================================================
+% This script loads surrogate data created with ../data_preparation/prepare_surrogates.m
+% and calculates:
+% 1) coefficient of variation (COV) for gait (SL/ST/SS) surrogates,
+% 2) trend speed and its COV,
+% 3) trend speed control.
+% The boxplots of these quantities are plotted for each treadmill speed.
+% Before running the script,  please set the type of surrogates  
+% (1 - independent, 2 - cross-correlated, 3 - shuffled).
+% =========================================================================
+%
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+
+ 
 clc, clear, close all
 
-% This script loads surrogate data and calculates coefficient 
-% of variation (COV) for: gait parameters (SL/ST/SS), 
-% trend speed, and speed control.
-
-% Before running the script,  please set: type of surrogates  
- % (1 - independent, 2 - cross-correlated, 3 - shuffled).
- 
-% Script generates boxplots of trend speed control and COV
-% of: trend speed, SL, ST, and SS for each treadmill speed.
+% 1 - independent, 2 - cross-correlated, 3 - shuffled
 surrogates_type = 1;
-
 
 if(surrogates_type < 1 || surrogates_type > 3)
     error('Error. surrogates_type must be an integer between 1 and 3.')
@@ -83,74 +106,23 @@ for i = 1 : 5 % 1-5 SPD
 end
 
 % visualize data
-ind = [5, 3, 1, 2, 4];
-dat = [];
-group = [];
 
-for l = 1 : length(ind)
-    dat = [dat; speed_control{ind(l)}];
-    group = [group; l*ones(size(speed_control{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('trend speed control');
-title(strcat(ver,' surrogates'));
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% speed control
+boxplots_for_all_speeds(speed_control, strcat(ver,' surrogates'),...
+    'trend speed control');
 
-dat = [];
-group = [];
+% COV trend speed
+boxplots_for_all_speeds(COV_trend_speed_cell, 'experimental data',...
+    'COV trend speed [%]');
 
-for l = 1 : length(ind)
-    dat = [dat; COV_trend_speed_cell{ind(l)}];
-    group = [group; l*ones(size(COV_trend_speed_cell{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV trend speed [%]');
-title(strcat(ver,' surrogates'));
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% COV SL
+boxplots_for_all_speeds(COV_SL, 'experimental data',...
+    'COV SL [%]');
 
-dat = [];
-group = [];
+% COV ST
+boxplots_for_all_speeds(COV_ST, 'experimental data',...
+    'COV ST [%]');
 
-for l = 1 : length(ind)
-    dat = [dat; COV_SL{ind(l)}];
-    group = [group; l*ones(size(COV_SL{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV SL [%]');
-title(strcat(ver,' surrogates'));
-set(gca,'XTickLabel',{'80','90','100','110','120'});
-
-
-dat = [];
-group = [];
-
-for l = 1 : length(ind)
-    dat = [dat; COV_ST{ind(l)}];
-    group = [group; l*ones(size(COV_ST{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV ST [%]');
-title(strcat(ver,' surrogates'));
-set(gca,'XTickLabel',{'80','90','100','110','120'});
-
-dat = [];
-group = [];
-
-for l = 1 : length(ind)
-    dat = [dat; COV_SS{ind(l)}];
-    group = [group; l*ones(size(COV_SS{ind(l)}))];
-end
-figure;
-boxplot(dat,group);
-xlabel('treadmill speed [%PWS]');
-ylabel('COV SS [%]');
-title(strcat(ver,' surrogates'));
-set(gca,'XTickLabel',{'80','90','100','110','120'});
+% COV SS
+boxplots_for_all_speeds(COV_SS, 'experimental data',...
+    'COV SS [%]');

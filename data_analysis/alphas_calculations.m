@@ -1,15 +1,46 @@
-clc, clear, close all
-
-% This script loads postprocessed Dingwell’s data 
-% and calculates scaling exponent values using four methods 
-% (DFA1-3 and madogram) for original time series 
-% and their corresponding residuals.
-% The script determines whether exponents' means or medians
-% are statistically lower than 0.5. 
-
-% Before running the script,  please set attribute (SL/ST/SS).
+% =========================================================================
+% This script  uses DFA1-3 and madogram algorithms to calculate  the scaling
+% indices  of Dingwell's experimental time series  and those of the corresponding 
+% MARS residuals. The input files must be generated first using 
+% ../data_preparation/prepare_data.m script. For a given treadmill speed, 
+% the script also determines whether the scaling is anti-persistent (i.e. 
+% the median or mean of scaling exponents is statistically smaller than 0.5). 
+% Set attributeNumber variable  to 1, 2, and 3 to  select  SL, ST,
+% and SS, respectively.
+%
 % Please ensure that you have added WFDB Toolbox folder 
-% (in libs/ folder) to MATLAB path.
+% (in libs/ folder) to the MATLAB search path. dfa function from WFDB library
+% is used to perform detrended fluctuation analysis.
+% =========================================================================
+%
+% GaitTrends: 
+% Authors: Klaudia Kozlowska (Klaudia.Kozlowska@pwr.edu.pl)
+%          Miroslaw Latka    (Miroslaw.Latka@pwr.edu.pl)
+% URL: https://github.com/mlatka/GaitTrends.git
+%
+% Copyright (C) 2020  Klaudia Kozlowska and Miroslaw Latka
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% <http://www.gnu.org/licenses/>.
+
+% =========================================================================
+% Last update: July 21, 2020
+% =========================================================================
+
+% Citing the GaitTrends:
+% https://doi.org/10.1101/677948
+
+% =========================================================================
+
+clc, clear, close all
 attributeNumber = 1; % 1 - SL, 2 - ST, 3 - SS
 
 
@@ -87,11 +118,11 @@ for i = 1 : s(2)
 			
 		alphas_matrix = [alphas_matrix; row]; 
 
-	end % end j loop
+	end % end trial loop
 
 	alphas_cell{end+1} = alphas_matrix;
 
-end % end i loop
+end % end speed loop
 
 % checking if exponents mean/median < 0.5
 clc

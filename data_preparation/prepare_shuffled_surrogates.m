@@ -180,7 +180,6 @@ for i = 1 : s(2)
 			plot(surST,'r--');
 			plot(predSL,'b');
 			plot(predST,'r'); hold off;
-			legend('SL','ST','trend SL','trend ST');
 			title('surrogate data');  		
 		end
   
